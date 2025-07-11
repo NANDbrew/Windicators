@@ -1,4 +1,8 @@
-﻿namespace Windicators
+﻿using BepInEx;
+using HarmonyLib;
+using System.Reflection;
+
+namespace Windicators
 {
     [BepInPlugin(PLUGIN_ID, PLUGIN_NAME, PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin
