@@ -13,10 +13,11 @@ namespace Windicators
 
         //--settings--
         //internal ConfigEntry<bool> someSetting;
-
+        internal static Plugin instance;
 
         private void Awake()
         {
+            instance = this;
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PLUGIN_ID);
 
             //someSetting = Config.Bind("Settings", "Some setting", false);
