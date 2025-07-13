@@ -90,10 +90,13 @@
     <Compile Include="Scripts\AssetTools.cs" />
     <Compile Include="Patches.cs" />
     <Compile Include="Plugin.cs" />
-    <Compile Include="Scripts\AutoLevel.cs" />
-    <Compile Include="Scripts\Weathervane.cs" />
-    <Compile Include="Scripts\WindFlag.cs" />
     <Compile Include="SpawnPatch.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\windi_bridge\WindiBridge.csproj">
+      <Project>{e5201a26-aa22-4e0d-a47c-e5e63b019766}</Project>
+      <Name>WindiBridge</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\BepInEx.Core.5.4.11\build\BepInEx.Core.targets" Condition="Exists('packages\BepInEx.Core.5.4.11\build\BepInEx.Core.targets')" />

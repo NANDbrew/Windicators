@@ -1,13 +1,14 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using System;
-using Windicators.Scripts;
+using WindiBridge;
+
 namespace Windicators
 {
     [HarmonyPatch(typeof(PrefabsDirectory), "PopulateShipItems")]
     internal static class ItemTest
     {
-        internal static string[] prefabNames = { "telltale", "telltale 1", "telltale 2", "wind compass E", "telltale 3" };
+        internal static string[] prefabNames = { "telltale", "telltale 1", "telltale 2", "wind compass E", "telltale 3", "telltale 4", "telltale 5", "wind compass M" };
         internal static void Prefix()
         {
             Array.Resize(ref PrefabsDirectory.instance.directory, 512);
@@ -16,23 +17,6 @@ namespace Windicators
             {
                 var prefab = AssetTools.bundle.LoadAsset("Assets/Windicators/" + name + ".prefab") as GameObject;
                 PrefabsDirectory.instance.directory[prefab.GetComponent<SaveablePrefab>().prefabIndex] = prefab;
-                if (prefab.GetComponentInChildren<WindDirectionDisplay>() is WindDirectionDisplay disp)
-                {
-                    var newComp = disp.gameObject.AddComponent<Weathervane>();
-                    //if (name == "telltale 2" || name == "telltale 3") newComp.pivotLocal = false;
-                    if (disp.transform.parent.GetComponent<KeepVertical>() is KeepVertical comp2)
-                    {
-                        comp2.gameObject.AddComponent<AutoLevel>();
-                        Component.Destroy(comp2);
-                    }
-                    Component.Destroy(disp);
-                }
-                if (prefab.transform.GetChild(0).GetComponent<WindClothSimple>() is WindClothSimple wcs)
-                {
-                    wcs.gameObject.AddComponent<WindFlag>().multiplier = wcs.staticMultiplier;
-                    Component.Destroy(wcs);
-                }
-                //prefab.AddComponent<WindToggler>();
             }
         }
     }
