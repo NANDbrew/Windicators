@@ -8,10 +8,8 @@ using UnityEngine;
 
 namespace Windicators
 {
-    [HarmonyPatch(typeof(PlayerCrouching))]
     internal static class SpawnPatch
     {
-        [HarmonyPatch("Update")]
         [HarmonyPostfix]
         public static void UpdatePatch()
         {

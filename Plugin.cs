@@ -18,7 +18,14 @@ namespace Windicators
         private void Awake()
         {
             instance = this;
-            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PLUGIN_ID);
+            Harmony harmony = new Harmony(PLUGIN_ID);
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
+
+#if DEBUG
+            MethodInfo original = AccessTools.Method(typeof(PlayerCrouching), "Update");
+            MethodInfo patch = AccessTools.Method(typeof(SpawnPatch), "UpdatePatch");
+            harmony.Patch(original, new HarmonyMethod(patch));
+#endif
 
             //someSetting = Config.Bind("Settings", "Some setting", false);
         }
