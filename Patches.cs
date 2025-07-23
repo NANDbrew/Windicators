@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
-using UnityEngine;
 using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using WindiBridge;
 
 namespace Windicators
@@ -8,35 +10,94 @@ namespace Windicators
     [HarmonyPatch(typeof(PrefabsDirectory), "PopulateShipItems")]
     internal static class ItemTest
     {
-        internal static string[] prefabNames = { "telltale", "telltale 1", "telltale 2", "wind compass E", "telltale 3", "telltale 4", "telltale 5", "wind compass M" };
         internal static void Prefix()
         {
-            Array.Resize(ref PrefabsDirectory.instance.directory, 512);
-            AssetTools.LoadAssetBundles();
-            foreach (var name in prefabNames)
+            if (AssetTools.bundle == null) AssetTools.LoadAssetBundles();
+            //if (PrefabsDirectory.instance.directory.Length < 522) Array.Resize(ref PrefabsDirectory.instance.directory, 522);
+            foreach (var item in AssetTools.itemPrefabs)
             {
-                var prefab = AssetTools.bundle.LoadAsset("Assets/Windicators/" + name + ".prefab") as GameObject;
-                PrefabsDirectory.instance.directory[prefab.GetComponent<SaveablePrefab>().prefabIndex] = prefab;
+                if (item.Key >= PrefabsDirectory.instance.directory.Length)
+                {
+                    Array.Resize(ref PrefabsDirectory.instance.directory, item.Key + 5);
+                    Debug.Log("Windicators: Resized directory to " + PrefabsDirectory.instance.directory.Length + " to accommodate " + item.Value.name);
+                }
+                if (PrefabsDirectory.instance.directory[item.Key] == null)
+                {
+                    PrefabsDirectory.instance.directory[item.Key] = item.Value;
+                }
+                else
+                {
+                    Debug.LogWarning($"Windicators: Prefab at index {item.Key} already exists in directory, skipping {item.Value.name}");
+                }
             }
         }
     }
+    [HarmonyPatch(typeof(IslandHorizon), "LoadIslandScene")]
+    internal static class IslandHorizonPatches
+    {
+        [HarmonyPostfix]
+        internal static void Postfix(IslandHorizon __instance)
+        {
+            if (AssetTools.bundle == null) AssetTools.LoadAssetBundles();
+            Debug.Log("horizonPatches: patching shopkeeper");
+            if (AssetTools.shopKeepers.ContainsKey(__instance.islandIndex))
+            {
+                __instance.StartCoroutine(AddShopKeeper(__instance.islandIndex, AssetTools.shopKeepers[__instance.islandIndex]));
+#if DEBUG
+                Debug.Log($"Windicators: Adding shopkeeper for island {__instance.islandIndex}");
+#endif
+            }
+        }
+        private static IEnumerator AddShopKeeper(int islandIndex, GameObject shopkeeper)
+        {
+            yield return new WaitUntil(() => SceneManager.GetSceneByBuildIndex(islandIndex).isLoaded);
+            var parent = SceneManager.GetSceneByBuildIndex(islandIndex).GetRootGameObjects()[0].transform;
+            UnityEngine.Object.Instantiate(shopkeeper, parent.transform);
+
+        }
+
+    }
+
+
     [HarmonyPatch(typeof(ShipItem))]
-    internal static class HangableItemPatches
+    internal static class ShipItemPatches
     {
         [HarmonyPatch("OnEnterInventory")]
         [HarmonyPostfix]
         public static void EnterPatch(ShipItem __instance)
         {
             Debug.Log("into the pocket");
-            __instance.GetComponentInChildren<WindFlag>(true)?.gameObject.SetActive(false);
+            //__instance.GetComponent<InvSwitcherWindCompass>()?.OnEnterInventory();
+            __instance.GetComponent<InvSwitcher>()?.OnEnterInventory();//ToggleFlag(false);
         }
         [HarmonyPatch("OnLeaveInventory")]
         [HarmonyPostfix]
         internal static void ExitPatch(ShipItem __instance)
         {
             Debug.Log("out of the pocket");
-            __instance.GetComponentInChildren<WindFlag>(true)?.gameObject.SetActive(true);
+            //__instance.GetComponent<InvSwitcherWindCompass>()?.OnLeaveInventory();
+            __instance.GetComponent<InvSwitcher>()?.OnLeaveInventory();// ToggleFlag(true);
+        }
+        [HarmonyPatch("OnDrop")]
+        [HarmonyPostfix]
+        public static void DropPatch(ShipItemHangable __instance)
+        {
+            Debug.Log("dropped");
+            __instance.GetComponent<InvSwitcher>()?.OnDrop();
+        }
+        [HarmonyPatch("OnPickup")]
+        [HarmonyPostfix]
+        internal static void PickupPatch(ShipItem __instance)
+        {
+            Debug.Log("picked up");
+            __instance.GetComponent<InvSwitcher>()?.OnPickup();
+        }
+        [HarmonyPatch("ReturnToShopPos")]
+        [HarmonyPostfix]
+        internal static void ReturnToShopPatch(ShipItem __instance)
+        {
+            Debug.Log("drop");
+            __instance.GetComponent<InvSwitcher>()?.OnDrop();
         }
     }
-
 }
