@@ -32,30 +32,24 @@ namespace Windicators
             }
         }
     }
-    [HarmonyPatch(typeof(IslandHorizon), "LoadIslandScene")]
+    [HarmonyPatch(typeof(IslandStreetlightsManager), "Awake")]
     internal static class IslandHorizonPatches
     {
         [HarmonyPostfix]
-        internal static void Postfix(IslandHorizon __instance)
+        internal static void Postfix(IslandStreetlightsManager __instance)
         {
             if (AssetTools.bundle == null) AssetTools.LoadAssetBundles();
             Debug.Log("horizonPatches: patching shopkeeper");
-            if (AssetTools.shopKeepers.ContainsKey(__instance.islandIndex))
+            int index = __instance.gameObject.GetComponent<IslandSceneryScene>().parentIslandIndex;
+            if (AssetTools.shopKeepers.ContainsKey(index))
             {
-                __instance.StartCoroutine(AddShopKeeper(__instance.islandIndex, AssetTools.shopKeepers[__instance.islandIndex]));
+                UnityEngine.Object.Instantiate(AssetTools.shopKeepers[index], __instance.transform);
+
 #if DEBUG
-                Debug.Log($"Windicators: Adding shopkeeper for island {__instance.islandIndex}");
+                Debug.Log($"Windicators: Adding shopkeeper for island {index}");
 #endif
             }
         }
-        private static IEnumerator AddShopKeeper(int islandIndex, GameObject shopkeeper)
-        {
-            yield return new WaitUntil(() => SceneManager.GetSceneByBuildIndex(islandIndex).isLoaded);
-            var parent = SceneManager.GetSceneByBuildIndex(islandIndex).GetRootGameObjects()[0].transform;
-            UnityEngine.Object.Instantiate(shopkeeper, parent.transform);
-
-        }
-
     }
 
 
