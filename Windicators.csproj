@@ -107,6 +107,6 @@
     <Error Condition="!Exists('packages\BepInEx.Core.5.4.11\build\BepInEx.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\BepInEx.Core.5.4.11\build\BepInEx.Core.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y "Windicators.dll" "C:\Program Files (x86)\Steam\steamapps\common\Sailwind\BepInEx\plugins"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "Windicators.dll" "C:\Program Files (x86)\Steam\steamapps\common\Sailwind\BepInEx\plugins\Windicators"</PostBuildEvent>
   </PropertyGroup>
 </Project>

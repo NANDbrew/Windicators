@@ -35,12 +35,32 @@ namespace Windicators
             if (File.Exists(secondTry))
             {
                 bundle = AssetBundle.LoadFromFile(secondTry);
-/*                shopkeeperA = bundle.LoadAsset("Assets/Windicators/windicator_seller_A.prefab") as GameObject;
-                shopkeeperE = bundle.LoadAsset("Assets/Windicators/windicator_seller_E.prefab") as GameObject;
-                shopkeeperM = bundle.LoadAsset("Assets/Windicators/windicator_seller_M.prefab") as GameObject;
-*/
+                /*                shopkeeperA = bundle.LoadAsset("Assets/Windicators/windicator_seller_A.prefab") as GameObject;
+                                shopkeeperE = bundle.LoadAsset("Assets/Windicators/windicator_seller_E.prefab") as GameObject;
+                                shopkeeperM = bundle.LoadAsset("Assets/Windicators/windicator_seller_M.prefab") as GameObject;
+                */
+                Shader standard = Shader.Find("Standard");
+                Shader surface = Shader.Find("Particles/Standard Surface");
                 foreach (var prefab in bundle.LoadAllAssets<GameObject>())
                 {
+                    // this is a hack to fix objects rendering over fog. REMOVE AS SOON AS POSSIBLE
+                    if (prefab.name == "MatLib")
+                    {
+                        var child1 = prefab.transform.GetChild(0).GetComponent<Renderer>();
+                        for (int i = 0; i < child1.sharedMaterials.Length; i++)
+                        {
+                            var mat = new Material(standard);
+                            mat.CopyPropertiesFromMaterial(child1.sharedMaterials[i]);
+                            child1.sharedMaterials[i] = mat;
+                        }
+                        var child2 = prefab.transform.GetChild(1).GetComponent<Renderer>();
+                        for (int i = 0; i < child2.sharedMaterials.Length; i++)
+                        {
+                            var mat = new Material(surface);
+                            mat.CopyPropertiesFromMaterial(child2.sharedMaterials[i]);
+                            child2.sharedMaterials[i] = mat;
+                        }
+                    }
                     if (prefab.GetComponent<SaveablePrefab>() is SaveablePrefab saveable)
                     {
                         itemPrefabs.Add(saveable.prefabIndex, prefab);
