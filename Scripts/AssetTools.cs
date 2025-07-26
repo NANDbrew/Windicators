@@ -17,7 +17,7 @@ namespace Windicators
         public static GameObject shopkeeperM;
         public static GameObject shopkeeperE;
         public static Dictionary<int, GameObject> itemPrefabs = new Dictionary<int, GameObject>();
-        public static Dictionary<int, GameObject> shopKeepers = new Dictionary<int, GameObject>();
+        public static Dictionary<int, ShopInfo> shopKeepers = new Dictionary<int, ShopInfo>();
 
         public static void LoadAssetBundles()    //Load the bundle
         {
@@ -70,7 +70,7 @@ namespace Windicators
                     }
                     else if (prefab.GetComponent<ShopInfo>() is ShopInfo info)
                     {
-                        shopKeepers.Add(info.parentIslandIndex, prefab);
+                        shopKeepers.Add(info.parentIslandIndex, info);
 #if DEBUG
                         Debug.Log($"Windicators: added {info.name} to directory");
 #endif

@@ -43,8 +43,8 @@ namespace Windicators
             int index = __instance.gameObject.GetComponent<IslandSceneryScene>().parentIslandIndex;
             if (AssetTools.shopKeepers.ContainsKey(index))
             {
-                UnityEngine.Object.Instantiate(AssetTools.shopKeepers[index], __instance.transform);
-
+                var shopkeeper = UnityEngine.Object.Instantiate(AssetTools.shopKeepers[index], __instance.transform);
+                shopkeeper.shopPrefab.transform.parent = __instance.transform;
 #if DEBUG
                 Debug.Log($"Windicators: Adding shopkeeper for island {index}");
 #endif
