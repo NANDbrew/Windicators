@@ -26,7 +26,7 @@ namespace Windicators
             MethodInfo patch = AccessTools.Method(typeof(SpawnPatch), "UpdatePatch");
             harmony.Patch(original, new HarmonyMethod(patch));
 #endif
-
+            AssetTools.LoadAssetBundles();
             //someSetting = Config.Bind("Settings", "Some setting", false);
         }
     }

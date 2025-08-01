@@ -1,5 +1,4 @@
-﻿using PsychoticLab;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
@@ -19,7 +18,7 @@ namespace Windicators
         public static Dictionary<int, GameObject> itemPrefabs = new Dictionary<int, GameObject>();
         public static Dictionary<int, ShopInfo> shopKeepers = new Dictionary<int, ShopInfo>();
 
-        public static void LoadAssetBundles()    //Load the bundle
+        public static void LoadAssetBundles()
         {
             string dataPath = Directory.GetParent(Plugin.instance.Info.Location).FullName;
             string secondTry = Path.Combine(dataPath, assetFile);
@@ -28,17 +27,15 @@ namespace Windicators
             if (File.Exists(libSecondTry)) 
             {
                 Assembly.LoadFrom(libSecondTry);
-                Debug.Log("WindiBridge loaded other successfully");
+                string version = System.Diagnostics.FileVersionInfo.GetVersionInfo(libSecondTry).FileVersion;
+                Debug.Log($"Windicators: Loaded WindiBridge v{version}");
             }
-            else { Debug.LogError("Failed to load WindiBridge!"); }
+            else { Debug.LogError("Windicators: Failed to load WindiBridge!"); }
 
             if (File.Exists(secondTry))
             {
                 bundle = AssetBundle.LoadFromFile(secondTry);
-                /*                shopkeeperA = bundle.LoadAsset("Assets/Windicators/windicator_seller_A.prefab") as GameObject;
-                                shopkeeperE = bundle.LoadAsset("Assets/Windicators/windicator_seller_E.prefab") as GameObject;
-                                shopkeeperM = bundle.LoadAsset("Assets/Windicators/windicator_seller_M.prefab") as GameObject;
-                */
+
                 Shader standard = Shader.Find("Standard");
                 Shader surface = Shader.Find("Particles/Standard Surface");
                 foreach (var prefab in bundle.LoadAllAssets<GameObject>())
