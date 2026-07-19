@@ -32,6 +32,7 @@ namespace Windicators
             }
         }
     }
+
     [HarmonyPatch(typeof(IslandStreetlightsManager), "Awake")]
     internal static class IslandHorizonPatches
     {
@@ -79,10 +80,13 @@ namespace Windicators
         }
         [HarmonyPatch("OnDrop")]
         [HarmonyPostfix]
-        public static void DropPatch(ShipItemHangable __instance)
+        public static void DropPatch(ShipItem __instance)
         {
             //Debug.Log("dropped");
-            __instance.GetComponent<InvSwitcher>()?.OnDrop();
+            if (__instance.gameObject.layer != 26)
+            { 
+                __instance.GetComponent<InvSwitcher>()?.OnDrop(); 
+            }
         }
         [HarmonyPatch("OnPickup")]
         [HarmonyPostfix]
@@ -97,6 +101,25 @@ namespace Windicators
         {
             //Debug.Log("drop");
             __instance.GetComponent<InvSwitcher>()?.OnDrop();
+        }
+    }
+
+    [HarmonyPatch(typeof(CrateInventory))]
+    internal static class ShipItemPatches2
+    {
+        [HarmonyPatch("InsertItem")]
+        [HarmonyPostfix]
+        public static void EnterPatch(ShipItem item)
+        {
+            //Debug.Log("into the pocket");
+            item.GetComponent<InvSwitcher>()?.OnEnterInventory();
+        }
+        [HarmonyPatch("WithdrawItem")]
+        [HarmonyPostfix]
+        internal static void ExitPatch(ShipItem item)
+        {
+            //Debug.Log("out of the pocket");
+            item.GetComponent<InvSwitcher>()?.OnLeaveInventory();
         }
     }
 }
