@@ -1,8 +1,10 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
+
 namespace Windicators
 {
+#if DEBUG
     internal static class SpawnPatch
     {
         [HarmonyPostfix]
@@ -60,4 +62,5 @@ namespace Windicators
         }
 
     }
+#endif
 }
