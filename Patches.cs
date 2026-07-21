@@ -48,7 +48,14 @@ namespace Windicators
             {
                 var shopkeeper = UnityEngine.Object.Instantiate(AssetTools.shopKeepers[index], __instance.transform);
                 shopkeeper.shopPrefab.transform.parent = __instance.transform;
-
+/*                if (index == 15)
+                {
+                    AddShopItems.MakeShopItem("shop item (999)", __instance.transform, new Vector3(-68f, 3.3f, 44.1f), new Vector3(2f, 142f, 359.8f), AssetTools.itemPrefabs[514]);
+                }
+                else if (index == 9)
+                {
+                    AddShopItems.MakeShopItem("shop item (999)", __instance.transform, new Vector3(-79.8f, 4.6f, -546.5f), new Vector3(75f, 45.4f, 78.5f), AssetTools.itemPrefabs[512]);
+                }*/
                 Debug.Log($"Windicators: Adding shopkeeper for island {index}");
             }
             else

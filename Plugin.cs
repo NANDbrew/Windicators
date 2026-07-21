@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using System.Reflection;
+using UnityEngine.SceneManagement;
 
 namespace Windicators
 {
@@ -27,7 +28,11 @@ namespace Windicators
             harmony.Patch(original, new HarmonyMethod(patch));
 #endif
             AssetTools.LoadAssetBundles();
+            //SceneManager.sceneLoaded += AddShopItems.SceneLoaded;
+
+
             //someSetting = Config.Bind("Settings", "Some setting", false);
+
         }
     }
 }

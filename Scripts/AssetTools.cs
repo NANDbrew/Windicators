@@ -74,6 +74,8 @@ namespace Windicators
                     }
 
                 }
+
+                //var points = GameObject.Instantiate(itemPrefabs[514].transform.Find(), 
             }
             else { Debug.LogError("BULLSHITT!!"); }
             if (bundle == null)
