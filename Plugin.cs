@@ -32,7 +32,7 @@ namespace Windicators
 
             knotsConversion = Config.Bind("Settings", "Knots Conversion", false, new ConfigDescription("Convert wind speed to chiplog knots"));
 
-            knotsConversion.SettingChanged += (sender, args) => { WindiBridge.Anemometer.knotsConversion = knotsConversion.Value ? 1.865f : 0f; };
+            knotsConversion.SettingChanged += (sender, args) => { WindiBridge.Anemometer.knotsConversion = knotsConversion.Value ? 1.865f : 1f; };
         }
     }
 }
