@@ -10,7 +10,7 @@ namespace Windicators
     {
         public const string PLUGIN_ID = "com.nandbrew.Windicators";
         public const string PLUGIN_NAME = "Windicators";
-        public const string PLUGIN_VERSION = "1.1.0";
+        public const string PLUGIN_VERSION = "1.1.1";
 
         //--settings--
         internal ConfigEntry<bool> knotsConversion;
