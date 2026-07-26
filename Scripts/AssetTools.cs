@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using WindiBridge;
@@ -40,24 +41,7 @@ namespace Windicators
                 Shader surface = Shader.Find("Particles/Standard Surface");
                 foreach (var prefab in bundle.LoadAllAssets<GameObject>())
                 {
-                    // this is a hack to fix objects rendering over fog. REMOVE AS SOON AS POSSIBLE
-                    if (prefab.name == "MatLib")
-                    {
-                        var child1 = prefab.transform.GetChild(0).GetComponent<Renderer>();
-                        for (int i = 0; i < child1.sharedMaterials.Length; i++)
-                        {
-                            var mat = new Material(standard);
-                            mat.CopyPropertiesFromMaterial(child1.sharedMaterials[i]);
-                            child1.sharedMaterials[i] = mat;
-                        }
-                        var child2 = prefab.transform.GetChild(1).GetComponent<Renderer>();
-                        for (int i = 0; i < child2.sharedMaterials.Length; i++)
-                        {
-                            var mat = new Material(surface);
-                            mat.CopyPropertiesFromMaterial(child2.sharedMaterials[i]);
-                            child2.sharedMaterials[i] = mat;
-                        }
-                    }
+
                     if (prefab.GetComponent<SaveablePrefab>() is SaveablePrefab saveable)
                     {
                         itemPrefabs.Add(saveable.prefabIndex, prefab);
@@ -72,7 +56,21 @@ namespace Windicators
                         Debug.Log($"Windicators: added {info.name} to directory");
 #endif
                     }
-
+                    else if (prefab.GetComponent<RolloverTumbler>() is RolloverTumbler tumbler)
+                    {
+                        if (tumbler.name == "plus_tumbler_M")
+                        {
+                            var chiplog = PrefabsDirectory.instance.directory[92].transform.Find("chiplog_M");
+                            tumbler.sourceNeedle = chiplog.Find("pointer_002");
+                            var t2 = GameObject.Instantiate(tumbler, chiplog, false);
+                        }
+                        if (tumbler.name == "plus_tumbler_E")
+                        {
+                            var chiplog = PrefabsDirectory.instance.directory[93].transform.Find("chiplog_E");
+                            tumbler.sourceNeedle = chiplog.Find("pointer_001");
+                            var t2 = GameObject.Instantiate(tumbler, chiplog, false);
+                        }
+                    }
                 }
 
                 //var points = GameObject.Instantiate(itemPrefabs[514].transform.Find(), 
@@ -82,7 +80,29 @@ namespace Windicators
             {
                 Debug.LogError("Windicators: Bundle not loaded! Did you place it in the correct folder?");
             }
-            else { Debug.Log("Windicators: loaded bundle " + bundle.ToString()); }
+            else 
+            { 
+                Debug.Log("Windicators: loaded bundle " + bundle.ToString());
+
+                // stupid hack to fix fogless shader
+                var mats = bundle.LoadAllAssets(typeof(Material));
+                foreach (Material m in mats.Cast<Material>())
+                {
+                    var shaderName = m.shader.name;
+                    //Debug.LogWarning("trying to refresh shader: " + shaderName + " in material " + m.name);
+                    var newShader = Shader.Find(shaderName);
+                    if (newShader != null)
+                    {
+                        m.shader = newShader;
+                        //Debug.LogWarning("refreshed shader: " + shaderName + " in material " + m.name);
+
+                    }
+                    else
+                    {
+                        Debug.LogWarning("unable to refresh shader: " + shaderName + " in material " + m.name);
+                    }
+                }
+            }
         }
     }
 }
