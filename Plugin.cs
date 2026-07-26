@@ -1,7 +1,7 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using System.Reflection;
-using UnityEngine.SceneManagement;
+using BepInEx.Configuration;
 
 namespace Windicators
 {
@@ -13,7 +13,7 @@ namespace Windicators
         public const string PLUGIN_VERSION = "1.1.0";
 
         //--settings--
-        //internal ConfigEntry<bool> someSetting;
+        internal ConfigEntry<bool> knotsConversion;
         internal static Plugin instance;
 
         private void Awake()
@@ -30,9 +30,9 @@ namespace Windicators
             AssetTools.LoadAssetBundles();
             //SceneManager.sceneLoaded += AddShopItems.SceneLoaded;
 
+            knotsConversion = Config.Bind("Settings", "Knots Conversion", false, new ConfigDescription("Convert wind speed to chiplog knots"));
 
-            //someSetting = Config.Bind("Settings", "Some setting", false);
-
+            knotsConversion.SettingChanged += (sender, args) => { WindiBridge.Anemometer.knotsConversion = knotsConversion.Value ? 1.865f : 0f; };
         }
     }
 }
