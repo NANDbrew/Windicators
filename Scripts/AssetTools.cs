@@ -57,7 +57,7 @@ namespace Windicators
                         Debug.Log($"Windicators: added {info.name} to directory");
 #endif
                     }
-                    else if (prefab.GetComponent<RolloverTumbler>() is RolloverTumbler tumbler)
+/*                    else if (prefab.GetComponent<RolloverTumbler>() is RolloverTumbler tumbler)
                     {
                         if (tumbler.name == "plus_tumbler_M")
                         {
@@ -67,7 +67,7 @@ namespace Windicators
                         {
                             tumblers[93] = tumbler;
                         }
-                    }
+                    }*/
                 }
 
                 //var points = GameObject.Instantiate(itemPrefabs[514].transform.Find(), 

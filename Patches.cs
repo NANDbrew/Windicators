@@ -30,7 +30,7 @@ namespace Windicators
                     Debug.LogWarning($"Windicators: Prefab at index {item.Key} already exists in directory, skipping {item.Value.name}");
                 }
             }
-            var chiplog_E = PrefabsDirectory.instance.directory[93].transform.Find("chiplog/chiplog_E");
+/*            var chiplog_E = PrefabsDirectory.instance.directory[93].transform.Find("chiplog/chiplog_E");
             foreach (var tumbler in AssetTools.tumblers)
             {
                 if (tumbler.Key == 92)
@@ -51,7 +51,7 @@ namespace Windicators
                     //GameObject.Instantiate(tumbler.Value, chiplog, false);
 
                 }
-            }
+            }*/
 
         }
     }
