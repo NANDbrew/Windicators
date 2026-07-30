@@ -18,6 +18,7 @@ namespace Windicators
         public static GameObject shopkeeperE;
         public static Dictionary<int, GameObject> itemPrefabs = new Dictionary<int, GameObject>();
         public static Dictionary<int, ShopInfo> shopKeepers = new Dictionary<int, ShopInfo>();
+        public static Dictionary<int, RolloverTumbler> tumblers = new Dictionary<int, RolloverTumbler>();
 
         public static void LoadAssetBundles()
         {
@@ -60,15 +61,11 @@ namespace Windicators
                     {
                         if (tumbler.name == "plus_tumbler_M")
                         {
-                            var chiplog = PrefabsDirectory.instance.directory[92].transform.Find("chiplog_M");
-                            tumbler.sourceNeedle = chiplog.Find("pointer_002");
-                            var t2 = GameObject.Instantiate(tumbler, chiplog, false);
+                            tumblers[92] = tumbler;
                         }
                         if (tumbler.name == "plus_tumbler_E")
                         {
-                            var chiplog = PrefabsDirectory.instance.directory[93].transform.Find("chiplog_E");
-                            tumbler.sourceNeedle = chiplog.Find("pointer_001");
-                            var t2 = GameObject.Instantiate(tumbler, chiplog, false);
+                            tumblers[93] = tumbler;
                         }
                     }
                 }

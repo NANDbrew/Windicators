@@ -30,6 +30,29 @@ namespace Windicators
                     Debug.LogWarning($"Windicators: Prefab at index {item.Key} already exists in directory, skipping {item.Value.name}");
                 }
             }
+            var chiplog_E = PrefabsDirectory.instance.directory[93].transform.Find("chiplog/chiplog_E");
+            foreach (var tumbler in AssetTools.tumblers)
+            {
+                if (tumbler.Key == 92)
+                {
+                    var chiplog = PrefabsDirectory.instance.directory[92].transform.Find("chiplog/chiplog_M");
+                    tumbler.Value.sourceNeedle = chiplog.Find("pointer_002");
+                    tumbler.Value.transform.SetParent(chiplog, false);
+                    tumbler.Value.transform.localEulerAngles = new Vector3(0, 90, 0);
+                    //GameObject.Instantiate(tumbler.Value, chiplog, false);
+
+                }
+                else if (tumbler.Key == 93)
+                {
+                    var chiplog = PrefabsDirectory.instance.directory[93].transform.Find("chiplog/chiplog_E");
+                    tumbler.Value.sourceNeedle = chiplog.Find("pointer_001");
+                    tumbler.Value.transform.SetParent(chiplog, false);
+                    tumbler.Value.transform.localEulerAngles = new Vector3(0, 90, 0);
+                    //GameObject.Instantiate(tumbler.Value, chiplog, false);
+
+                }
+            }
+
         }
     }
 
