@@ -10,7 +10,7 @@ namespace Windicators
     {
         public const string PLUGIN_ID = "com.nandbrew.Windicators";
         public const string PLUGIN_NAME = "Windicators";
-        public const string PLUGIN_VERSION = "1.1.1";
+        public const string PLUGIN_VERSION = "1.1.2";
 
         //--settings--
         internal ConfigEntry<bool> knotsConversion;
@@ -32,7 +32,13 @@ namespace Windicators
 
             knotsConversion = Config.Bind("Settings", "Knots Conversion", false, new ConfigDescription("Convert wind speed to chiplog knots"));
 
-            knotsConversion.SettingChanged += (sender, args) => { WindiBridge.Anemometer.knotsConversion = knotsConversion.Value ? 1.865f : 1f; };
+            knotsConversion.SettingChanged += (sender, args) => UpdateKnotsConversion();
+            UpdateKnotsConversion();
+        }
+
+        public void UpdateKnotsConversion()
+        {
+            WindiBridge.Anemometer.knotsConversion = knotsConversion.Value ? 1.865f : 1f;
         }
     }
 }
