@@ -152,4 +152,19 @@ namespace Windicators
             item.GetComponent<InvSwitcher>()?.OnLeaveInventory();
         }
     }
+
+    [HarmonyPatch(typeof(ShipItemHammer))]
+    internal static class HammerPatch
+    {
+        [HarmonyPatch("CanNail")]
+        [HarmonyPostfix]
+        public static void CanNailPatch(ShipItem item, ref bool __result)
+        {
+            if (item.GetComponent<InvSwitcher>()?.anemometer != null)
+            {
+                __result = true;
+            }
+        }
+
+    }
 }
