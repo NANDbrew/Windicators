@@ -10,7 +10,7 @@ namespace Windicators
     {
         public const string PLUGIN_ID = "com.nandbrew.Windicators";
         public const string PLUGIN_NAME = "Windicators";
-        public const string PLUGIN_VERSION = "1.1.2";
+        public const string PLUGIN_VERSION = "1.1.3";
 
         //--settings--
         internal ConfigEntry<bool> knotsConversion;
@@ -21,7 +21,6 @@ namespace Windicators
             instance = this;
             Harmony harmony = new Harmony(PLUGIN_ID);
             harmony.PatchAll(Assembly.GetExecutingAssembly());
-
 #if DEBUG
             MethodInfo original = AccessTools.Method(typeof(PlayerCrouching), "Update");
             MethodInfo patch = AccessTools.Method(typeof(SpawnPatch), "UpdatePatch");

@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
 using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using WindiBridge;
 
 namespace Windicators
@@ -71,6 +69,10 @@ namespace Windicators
             {
                 var shopkeeper = UnityEngine.Object.Instantiate(AssetTools.shopKeepers[index], __instance.transform);
                 shopkeeper.shopPrefab.transform.parent = __instance.transform;
+                foreach(var light in shopkeeper.lights)
+                {
+                    __instance.AddStreetlight(light);
+                }
 /*                if (index == 15)
                 {
                     AddShopItems.MakeShopItem("shop item (999)", __instance.transform, new Vector3(-68f, 3.3f, 44.1f), new Vector3(2f, 142f, 359.8f), AssetTools.itemPrefabs[514]);
