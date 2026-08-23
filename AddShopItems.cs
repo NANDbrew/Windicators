@@ -55,9 +55,9 @@ namespace Windicators
 #if DEBUG
             Debug.Log("Windicators: patching shopkeeper on island " + index);
 #endif
-            if (AssetTools.shopKeepers.ContainsKey(index))
+            if (AssetTools.shopPrefabs.ContainsKey(index))
             {
-                var shopkeeper = UnityEngine.Object.Instantiate(AssetTools.shopKeepers[index], scenery.transform);
+                var shopkeeper = UnityEngine.Object.Instantiate(AssetTools.shopPrefabs[index], scenery.transform);
                 shopkeeper.shopPrefab.transform.parent = scenery.transform;
 /*                if (index == 15)
                 {

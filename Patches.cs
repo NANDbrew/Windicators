@@ -65,11 +65,11 @@ namespace Windicators
 #if DEBUG
             Debug.Log("Windicators: patching shopkeeper on island " + index);
 #endif
-            if (AssetTools.shopKeepers.ContainsKey(index))
+            if (AssetTools.shopPrefabs.ContainsKey(index))
             {
-                var shopkeeper = UnityEngine.Object.Instantiate(AssetTools.shopKeepers[index], __instance.transform);
-                shopkeeper.shopPrefab.transform.parent = __instance.transform;
-                foreach(var light in shopkeeper.lights)
+                var shopPrefab = UnityEngine.Object.Instantiate(AssetTools.shopPrefabs[index], __instance.transform);
+                shopPrefab.shopPrefab.transform.parent = __instance.transform;
+                foreach(var light in shopPrefab.lights)
                 {
                     __instance.AddStreetlight(light);
                 }

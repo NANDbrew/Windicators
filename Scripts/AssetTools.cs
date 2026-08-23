@@ -13,12 +13,9 @@ namespace Windicators
         const string assetFile = "windicators";
         const string libFile = "WindiBridge.dll";
 
-        public static GameObject shopkeeperA;
-        public static GameObject shopkeeperM;
-        public static GameObject shopkeeperE;
         public static Dictionary<int, GameObject> itemPrefabs = new Dictionary<int, GameObject>();
-        public static Dictionary<int, ShopInfo> shopKeepers = new Dictionary<int, ShopInfo>();
-        public static Dictionary<int, RolloverTumbler> tumblers = new Dictionary<int, RolloverTumbler>();
+        public static Dictionary<int, ShopInfo> shopPrefabs = new Dictionary<int, ShopInfo>();
+        //public static Dictionary<int, RolloverTumbler> tumblers = new Dictionary<int, RolloverTumbler>();
 
         public static void LoadAssetBundles()
         {
@@ -52,7 +49,7 @@ namespace Windicators
                     }
                     else if (prefab.GetComponent<ShopInfo>() is ShopInfo info)
                     {
-                        shopKeepers.Add(info.parentIslandIndex, info);
+                        shopPrefabs.Add(info.parentIslandIndex, info);
 #if DEBUG
                         Debug.Log($"Windicators: added {info.name} to directory");
 #endif
@@ -70,9 +67,8 @@ namespace Windicators
                     }*/
                 }
 
-                //var points = GameObject.Instantiate(itemPrefabs[514].transform.Find(), 
             }
-            else { Debug.LogError("BULLSHITT!!"); }
+            else { Debug.LogError("Couldn't find file!!"); }
             if (bundle == null)
             {
                 Debug.LogError("Windicators: Bundle not loaded! Did you place it in the correct folder?");
@@ -86,12 +82,10 @@ namespace Windicators
                 foreach (Material m in mats.Cast<Material>())
                 {
                     var shaderName = m.shader.name;
-                    //Debug.LogWarning("trying to refresh shader: " + shaderName + " in material " + m.name);
                     var newShader = Shader.Find(shaderName);
                     if (newShader != null)
                     {
                         m.shader = newShader;
-                        //Debug.LogWarning("refreshed shader: " + shaderName + " in material " + m.name);
 
                     }
                     else
