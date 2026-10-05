@@ -10,46 +10,27 @@ namespace Windicators
     {
         internal static void Prefix()
         {
-            if (AssetTools.bundle == null) AssetTools.LoadAssetBundles();
-
-            foreach (var item in AssetTools.itemPrefabs)
+            try
             {
-                if (item.Key >= PrefabsDirectory.instance.directory.Length)
-                {
-                    Array.Resize(ref PrefabsDirectory.instance.directory, item.Key + 5);
-                    Debug.Log("Windicators: Resized directory to " + PrefabsDirectory.instance.directory.Length + " to accommodate " + item.Value.name);
-                }
-                if (PrefabsDirectory.instance.directory[item.Key] == null)
-                {
-                    PrefabsDirectory.instance.directory[item.Key] = item.Value;
-                }
-                else
-                {
-                    Debug.LogWarning($"Windicators: Prefab at index {item.Key} already exists in directory, skipping {item.Value.name}");
-                }
-            }
-/*            var chiplog_E = PrefabsDirectory.instance.directory[93].transform.Find("chiplog/chiplog_E");
-            foreach (var tumbler in AssetTools.tumblers)
-            {
-                if (tumbler.Key == 92)
-                {
-                    var chiplog = PrefabsDirectory.instance.directory[92].transform.Find("chiplog/chiplog_M");
-                    tumbler.Value.sourceNeedle = chiplog.Find("pointer_002");
-                    tumbler.Value.transform.SetParent(chiplog, false);
-                    tumbler.Value.transform.localEulerAngles = new Vector3(0, 90, 0);
-                    //GameObject.Instantiate(tumbler.Value, chiplog, false);
+                if (AssetTools.bundle == null) AssetTools.LoadAssetBundles();
 
-                }
-                else if (tumbler.Key == 93)
+                foreach (var item in AssetTools.itemPrefabs)
                 {
-                    var chiplog = PrefabsDirectory.instance.directory[93].transform.Find("chiplog/chiplog_E");
-                    tumbler.Value.sourceNeedle = chiplog.Find("pointer_001");
-                    tumbler.Value.transform.SetParent(chiplog, false);
-                    tumbler.Value.transform.localEulerAngles = new Vector3(0, 90, 0);
-                    //GameObject.Instantiate(tumbler.Value, chiplog, false);
-
+                    if (item.Key >= PrefabsDirectory.instance.directory.Length)
+                    {
+                        Array.Resize(ref PrefabsDirectory.instance.directory, item.Key + 5);
+                        Debug.Log("Windicators: Resized directory to " + PrefabsDirectory.instance.directory.Length + " to accommodate " + item.Value.name);
+                    }
+                    if (PrefabsDirectory.instance.directory[item.Key] == null)
+                    {
+                        PrefabsDirectory.instance.directory[item.Key] = item.Value;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Windicators: Prefab at index {item.Key} already exists in directory, skipping {item.Value.name}");
+                    }
                 }
-            }*/
+            } catch (Exception e) { Debug.LogError(e); }
 
         }
     }
@@ -60,35 +41,38 @@ namespace Windicators
         [HarmonyPostfix]
         internal static void Postfix(IslandStreetlightsManager __instance)
         {
-            if (AssetTools.bundle == null) AssetTools.LoadAssetBundles();
-            int index = __instance.gameObject.GetComponent<IslandSceneryScene>().parentIslandIndex;
+            try
+            {
+                if (AssetTools.bundle == null) AssetTools.LoadAssetBundles();
+                int index = __instance.gameObject.GetComponent<IslandSceneryScene>().parentIslandIndex;
 #if DEBUG
             Debug.Log("Windicators: patching shopkeeper on island " + index);
 #endif
-            if (AssetTools.shopPrefabs.ContainsKey(index))
-            {
-                var shopPrefab = UnityEngine.Object.Instantiate(AssetTools.shopPrefabs[index], __instance.transform);
-                shopPrefab.shopPrefab.transform.parent = __instance.transform;
-                foreach(var light in shopPrefab.lights)
+                if (AssetTools.shopPrefabs.ContainsKey(index))
                 {
-                    __instance.AddStreetlight(light);
+                    var shopPrefab = UnityEngine.Object.Instantiate(AssetTools.shopPrefabs[index], __instance.transform);
+                    shopPrefab.shopPrefab.transform.parent = __instance.transform;
+                    foreach (var light in shopPrefab.lights)
+                    {
+                        __instance.AddStreetlight(light);
+                    }
+                    /*                if (index == 15)
+                                    {
+                                        AddShopItems.MakeShopItem("shop item (999)", __instance.transform, new Vector3(-68f, 3.3f, 44.1f), new Vector3(2f, 142f, 359.8f), AssetTools.itemPrefabs[514]);
+                                    }
+                                    else if (index == 9)
+                                    {
+                                        AddShopItems.MakeShopItem("shop item (999)", __instance.transform, new Vector3(-79.8f, 4.6f, -546.5f), new Vector3(75f, 45.4f, 78.5f), AssetTools.itemPrefabs[512]);
+                                    }*/
+                    Debug.Log($"Windicators: Adding shopkeeper for island {index}");
                 }
-/*                if (index == 15)
+                else
                 {
-                    AddShopItems.MakeShopItem("shop item (999)", __instance.transform, new Vector3(-68f, 3.3f, 44.1f), new Vector3(2f, 142f, 359.8f), AssetTools.itemPrefabs[514]);
-                }
-                else if (index == 9)
-                {
-                    AddShopItems.MakeShopItem("shop item (999)", __instance.transform, new Vector3(-79.8f, 4.6f, -546.5f), new Vector3(75f, 45.4f, 78.5f), AssetTools.itemPrefabs[512]);
-                }*/
-                Debug.Log($"Windicators: Adding shopkeeper for island {index}");
-            }
-            else
-            {
 #if DEBUG
                 Debug.LogWarning($"Windicators: No shopkeeper found for island {index}");
 #endif
-            }
+                }
+            } catch (Exception ex) { Debug.LogError(ex); }
         }
     }
 
